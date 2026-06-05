@@ -38,7 +38,6 @@
             position: relative;
         }
 
-        /* تأثير الغبار والنجوم الكونية */
         body::before {
             content: '';
             position: fixed;
@@ -59,7 +58,6 @@
             opacity: 0.6;
         }
 
-        /* شارة التبعية للأكاديمية أعلى النموذج */
         .academy-affiliation-badge {
             background: rgba(242, 197, 114, 0.08);
             border: 1px solid var(--accent-gold);
@@ -73,7 +71,6 @@
             box-shadow: 0 0 15px rgba(242, 197, 114, 0.1);
         }
 
-        /* حاوية استمارة التسجيل */
         .registration-container {
             width: 100%;
             max-width: 550px;
@@ -109,7 +106,6 @@
             opacity: 0.7;
         }
 
-        /* تصميم الحقول المدخلة */
         .form-group {
             margin-bottom: 22px;
             position: relative;
@@ -149,7 +145,6 @@
             margin-right: 5px;
         }
 
-        /* تصميم اختيار التخصصات المتعددة */
         .specialties-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -204,7 +199,6 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        /* أزرار التسجيل */
         .submit-btn {
             width: 100%;
             padding: 16px;
@@ -233,7 +227,6 @@
             transform: none;
         }
 
-        /* تنسيقات بطاقة العضوية الرقمية */
         .card-result-zone {
             width: 100%;
             max-width: 500px;
@@ -253,7 +246,7 @@
         .membership-card {
             width: 100%;
             height: 280px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            background: linear-gradient(135deg, rgba(15, 11, 8, 0.95) 0%, rgba(30, 22, 16, 0.95) 100%);
             border: 1px solid rgba(242, 197, 114, 0.3);
             border-radius: 24px;
             padding: 25px;
@@ -262,7 +255,7 @@
             -webkit-backdrop-filter: blur(20px);
             box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 40px rgba(242, 197, 114, 0.05) inset;
             overflow: hidden;
-            margin-bottom: 35px;
+            margin-bottom: 20px;
         }
 
         .membership-card::before {
@@ -383,7 +376,28 @@
             color: var(--text-color);
         }
 
-        /* زر بوابة الدخول للأكاديمية */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px;
+            background: rgba(242, 197, 114, 0.06);
+            border: 1px dashed var(--accent-gold);
+            border-radius: 16px;
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .download-btn:hover {
+            background: rgba(242, 197, 114, 0.15);
+            transform: translateY(-2px);
+        }
+
         .academy-gate-btn {
             display: inline-flex;
             align-items: center;
@@ -422,7 +436,6 @@
             margin-bottom: 15px;
         }
 
-        /* تذييل الصفحة المخصص للمطور لابوبو */
         .dev-footer {
             margin-top: 40px;
             font-size: 0.85rem;
@@ -522,7 +535,7 @@
     <div class="card-result-zone" id="cardResultZone">
         <h2 class="success-title">✨ مبارك! تم اعتماد عضويتك بنجاح</h2>
         
-        <div class="membership-card">
+        <div class="membership-card" id="membershipCardDiv">
             <div class="card-rings-decor"></div>
             <div class="card-header">
                 <div class="card-logo">
@@ -544,8 +557,12 @@
             </div>
         </div>
 
-        <a href="index.html" class="academy-gate-btn">
-            <span>الانتقال ودخول بوابة الأكاديمية 🚀</span>
+        <button class="download-btn" onclick="downloadCardAsImage()">
+            <span>تحميل البطاقة كصورة 💾</span>
+        </button>
+
+        <a href="https://chat.whatsapp.com/EIJogTGiz1dKOvZNKh4hJD" target="_blank" class="academy-gate-btn">
+            <span>الانتقال ودخول مجتمع الأكاديمية 🚀</span>
         </a>
     </div>
 
@@ -553,8 +570,9 @@
         تحت برمجة وتطوير <span>لابوبو</span>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <script>
-        // تم دمج رابط الـ Apps Script الخاص بك بنجاح هنا
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXGt6W8KSvmJAIEFG8G1XQV2rmZMWKDaLnliufYakOlKx3sSg3OfAjS-nfUBVmzbTS-A/exec";
 
         async function generateMembership(event) {
@@ -599,7 +617,6 @@
             };
 
             try {
-                // إرسال البيانات بشكل قياسي لقراءة الرد وفحص التكرار بدقة
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     headers: {
@@ -610,7 +627,6 @@
 
                 const data = await response.json();
 
-                // إذا وجد السكريبت أن اللقب مكرر، يوقف العملية فوراً وينبه المستخدم
                 if (data.result === "duplicate") {
                     alert("عذراً! هذا اللقب مستخدم ومحجوز مسبقاً من قِبل فنان آخر في الأكاديمية. يرجى اختيار لقب مميز وخاص بك.");
                     submitBtn.innerText = originalBtnText;
@@ -625,7 +641,6 @@
                     return;
                 }
 
-                // في حال النجاح التام، يتم عرض البطاقة الرقمية مباشرة
                 document.getElementById('cardName').innerText = name;
                 document.getElementById('cardNickname').innerText = `(${nickname})`;
                 document.getElementById('cardPhone').innerText = phone;
@@ -660,6 +675,39 @@
                 submitBtn.innerText = originalBtnText;
                 submitBtn.disabled = false;
             }
+        }
+
+        function downloadCardAsImage() {
+            const cardElement = document.getElementById('membershipCardDiv');
+            const downloadBtn = document.querySelector('.download-btn');
+            const nickname = document.getElementById('cardNickname').innerText.replace(/[()]/g, '');
+
+            downloadBtn.innerText = "جاري التقاط الصورة وتحميلها... ⏳";
+            downloadBtn.disabled = true;
+
+            html2canvas(cardElement, {
+                scale: 3, 
+                backgroundColor: null, 
+                useCORS: true, 
+                logging: false
+            }).then(canvas => {
+                const imageURI = canvas.toDataURL('image/png');
+                
+                const createLink = document.createElement('a');
+                createLink.download = `Saturn-Card-${nickname}.png`;
+                createLink.href = imageURI;
+                document.body.appendChild(createLink);
+                createLink.click();
+                document.body.removeChild(createLink);
+
+                downloadBtn.innerText = "تحميل البطاقة كصورة 💾";
+                downloadBtn.disabled = false;
+            }).catch(error => {
+                console.error("تحذير تحميل البطاقة:", error);
+                alert("حدث خطأ بسيط أثناء تصدير الصورة، يرجى المحاولة مرة أخرى.");
+                downloadBtn.innerText = "تحميل البطاقة كصورة 💾";
+                downloadBtn.disabled = false;
+            });
         }
     </script>
 </body>
