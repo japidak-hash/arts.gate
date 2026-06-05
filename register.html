@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة التسجيل الرسمية - أكاديمية الفنون</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+
+        :root {
+            --bg-color: #0a0705; 
+            --text-color: #fcf6eb; 
+            --accent-gold: #F2C572; 
+            --accent-sand: #D9B48F; 
+            --card-bg: rgba(242, 197, 114, 0.03);
+            --border-color: rgba(242, 197, 114, 0.15);
+            --nebula-glow: rgba(242, 197, 114, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px 20px 20px;
+            position: relative;
+        }
+
+        /* تأثير الغبار والنجوم الكونية */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, var(--nebula-glow) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+            opacity: 0.6;
+        }
+
+        /* شارة التبعية للأكاديمية أعلى النموذج */
+        .academy-affiliation-badge {
+            background: rgba(242, 197, 114, 0.08);
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 15px rgba(242, 197, 114, 0.1);
+        }
+
+        /* حاوية استمارة التسجيل */
+        .registration-container {
+            width: 100%;
+            max-width: 550px;
+            background: rgba(15, 11, 8, 0.75);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .registration-container.hidden {
+            opacity: 0;
+            transform: scale(0.9) translateY(-30px);
+            display: none;
+        }
+
+        .header-zone {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header-zone h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            text-shadow: 0 0 20px rgba(242, 197, 114, 0.3);
+            margin-bottom: 8px;
+        }
+
+        .header-zone p {
+            font-size: 0.95rem;
+            opacity: 0.7;
+        }
+
+        /* تصميم الحقول المدخلة */
+        .form-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--accent-sand);
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+            outline: none;
+            text-align: right;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--accent-gold);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 15px rgba(242, 197, 114, 0.15);
+        }
+
+        .optional-badge {
+            font-size: 0.8rem;
+            opacity: 0.5;
+            font-weight: normal;
+            margin-right: 5px;
+        }
+
+        /* تصميم اختيار التخصصات المتعددة */
+        .specialties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .specialty-item {
+            position: relative;
+        }
+
+        .specialty-item input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0; width: 0;
+        }
+
+        .specialty-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-align: center;
+        }
+
+        .specialty-label .moon-tag {
+            font-size: 0.75rem;
+            opacity: 0.5;
+            font-family: Arial, sans-serif;
+            margin-top: 2px;
+        }
+
+        .specialty-item input[type="checkbox"]:checked + .specialty-label {
+            background: rgba(242, 197, 114, 0.12);
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+            box-shadow: 0 0 15px rgba(242, 197, 114, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .specialty-label:hover {
+            border-color: var(--accent-gold);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* أزرار التسجيل */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #D18A39 100%);
+            border: none;
+            border-radius: 14px;
+            color: #0a0705;
+            font-size: 1.1rem;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 8px 25px rgba(242, 197, 114, 0.25);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(242, 197, 114, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .submit-btn:disabled {
+            background: #555;
+            color: #aaa;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* تنسيقات بطاقة العضوية الرقمية */
+        .card-result-zone {
+            width: 100%;
+            max-width: 500px;
+            display: none;
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card-result-zone.show {
+            display: flex;
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .membership-card {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(242, 197, 114, 0.3);
+            border-radius: 24px;
+            padding: 25px;
+            position: relative;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 40px rgba(242, 197, 114, 0.05) inset;
+            overflow: hidden;
+            margin-bottom: 35px;
+        }
+
+        .membership-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(242, 197, 114, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .card-rings-decor {
+            position: absolute;
+            bottom: -20px;
+            left: -30px;
+            width: 180px;
+            height: 60px;
+            border: 2px solid rgba(242, 197, 114, 0.15);
+            border-radius: 50%;
+            transform: rotate(-25deg);
+            pointer-events: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid rgba(242, 197, 114, 0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-logo h2 {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            letter-spacing: 1px;
+            font-family: Arial, sans-serif;
+            text-transform: lowercase;
+        }
+
+        .card-logo p {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            margin-top: 2px;
+        }
+
+        .member-id-badge {
+            background: rgba(242, 197, 114, 0.1);
+            border: 1px solid rgba(242, 197, 114, 0.3);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-family: monospace;
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .primary-info {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .display-name {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .display-nickname {
+            font-size: 1rem;
+            color: var(--accent-sand);
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .display-phone {
+            font-size: 0.85rem;
+            opacity: 0.5;
+            font-family: monospace;
+            direction: ltr;
+            text-align: right;
+        }
+
+        .display-bio {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-style: italic;
+            border-right: 2px solid var(--accent-gold);
+            padding-right: 8px;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-specialties-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .card-spec-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3px 10px;
+            border-radius: 30px;
+            color: var(--text-color);
+        }
+
+        /* زر بوابة الدخول للأكاديمية */
+        .academy-gate-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 18px;
+            background: transparent;
+            border: 2px solid var(--accent-gold);
+            border-radius: 16px;
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: 0 0 20px rgba(242, 197, 114, 0.1);
+            animation: pulsePortal 2s infinite alternate ease-in-out;
+        }
+
+        .academy-gate-btn:hover {
+            background: var(--accent-gold);
+            color: #0a0705;
+            box-shadow: 0 0 30px rgba(242, 197, 114, 0.5);
+            transform: scale(1.03);
+        }
+
+        @keyframes pulsePortal {
+            0% { box-shadow: 0 0 15px rgba(242, 197, 114, 0.1); }
+            100% { box-shadow: 0 0 30px rgba(242, 197, 114, 0.3); }
+        }
+
+        .success-title {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* تذييل الصفحة المخصص للمطور لابوبو */
+        .dev-footer {
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: rgba(217, 180, 143, 0.4);
+            text-align: center;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+            pointer-events: none;
+        }
+
+        .dev-footer span {
+            color: var(--accent-gold);
+            font-weight: 700;
+            text-shadow: 0 0 12px rgba(242, 197, 114, 0.3);
+            margin-right: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+
+    <div class="academy-affiliation-badge">الموقع الرسمي التابع لأكاديمية الفنون</div>
+
+    <div class="registration-container" id="regFormContainer">
+        <div class="header-zone">
+            <h1>أكاديمية الفنون</h1>
+            <p>سجل بياناتك الآن لإنشاء بطاقة عضويتك الفورية الفريدة</p>
+        </div>
+
+        <form id="academyRegistrationForm" onsubmit="generateMembership(event)">
+            <div class="form-group">
+                <label for="inputName">الاسم</label>
+                <input type="text" id="inputName" placeholder="اكتب اسمك الثلاثي أو الثنائي..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="inputNickname">اللقب</label>
+                <input type="text" id="inputNickname" placeholder="مثال: فنان الفضاء, ماركو, الساحر..." required>
+            </div>
+
+            <div class="form-group">
+                <label>تخصصاتك الفنية <span style="font-size:0.8rem; opacity:0.6;">(يمكنك اختيار أكثر من تخصص)</span></label>
+                <div class="specialties-grid">
+                    <div class="specialty-item">
+                        <input type="checkbox" id="spec-titan" value="الرسم (Titan)">
+                        <label for="spec-titan" class="specialty-label">
+                            <span>الرسم</span>
+                            <span class="moon-tag">Titan</span>
+                        </label>
+                    </div>
+                    <div class="specialty-item">
+                        <input type="checkbox" id="spec-rhea" value="التلوين (Rhea)">
+                        <label for="spec-rhea" class="specialty-label">
+                            <span>التلوين</span>
+                            <span class="moon-tag">Rhea</span>
+                        </label>
+                    </div>
+                    <div class="specialty-item">
+                        <input type="checkbox" id="spec-iapetus" value="التصوير (Iapetus)">
+                        <label for="spec-iapetus" class="specialty-label">
+                            <span>التصوير</span>
+                            <span class="moon-tag">Iapetus</span>
+                        </label>
+                    </div>
+                    <div class="specialty-item">
+                        <input type="checkbox" id="spec-enceladus" value="التصميم (Enceladus)">
+                        <label for="spec-enceladus" class="specialty-label">
+                            <span>التصميم</span>
+                            <span class="moon-tag">Enceladus</span>
+                        </label>
+                    </div>
+                    <div class="specialty-item">
+                        <input type="checkbox" id="spec-dione" value="الخط (Dione)">
+                        <label for="spec-dione" class="specialty-label">
+                            <span>الخط</span>
+                            <span class="moon-tag">Dione</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputPhone">رقم الهاتف</label>
+                <input type="tel" id="inputPhone" placeholder="07XXXXXXXX" required style="direction: ltr; text-align: left;">
+            </div>
+
+            <div class="form-group">
+                <label for="inputBio">نبذة شخصية <span class="optional-badge">(اختياري - سطر واحد)</span></label>
+                <textarea id="inputBio" rows="1" placeholder="اكتب عبارة ملهمة تمثلك كفنان..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">إصدار بطاقة العضوية وتأكيد الانضمام 🌌</button>
+        </form>
+    </div>
+
+    <div class="card-result-zone" id="cardResultZone">
+        <h2 class="success-title">✨ مبارك! تم اعتماد عضويتك بنجاح</h2>
+        
+        <div class="membership-card">
+            <div class="card-rings-decor"></div>
+            <div class="card-header">
+                <div class="card-logo">
+                    <h2>saturn academy</h2>
+                    <p>أكاديمية الفنون - بطاقة معتمدة</p>
+                </div>
+                <div class="member-id-badge" id="cardMemberId">SAT-2026-XXXX</div>
+            </div>
+            
+            <div class="card-body">
+                <div class="primary-info">
+                    <span class="display-name" id="cardName"></span>
+                    <span class="display-nickname" id="cardNickname"></span>
+                </div>
+                <div class="display-phone" id="cardPhone"></div>
+                <div class="display-bio" id="cardBio"></div>
+                
+                <div class="card-specialties-container" id="cardSpecialties"></div>
+            </div>
+        </div>
+
+        <a href="index.html" class="academy-gate-btn">
+            <span>الانتقال ودخول بوابة الأكاديمية 🚀</span>
+        </a>
+    </div>
+
+    <div class="dev-footer">
+        تحت برمجة وتطوير <span>لابوبو</span>
+    </div>
+
+    <script>
+        // تم دمج رابط الـ Apps Script الخاص بك بنجاح هنا
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXGt6W8KSvmJAIEFG8G1XQV2rmZMWKDaLnliufYakOlKx3sSg3OfAjS-nfUBVmzbTS-A/exec";
+
+        async function generateMembership(event) {
+            event.preventDefault();
+
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalBtnText = submitBtn.innerText;
+            
+            submitBtn.innerText = "جاري التحقق من اللقب واعتماد البيانات... ⏳";
+            submitBtn.disabled = true;
+
+            const name = document.getElementById('inputName').value.trim();
+            const nickname = document.getElementById('inputNickname').value.trim();
+            const phone = document.getElementById('inputPhone').value.trim();
+            let bio = document.getElementById('inputBio').value.trim();
+            
+            if(bio === "") {
+                bio = "عضو مبدع في فضاء أكاديمية ساترن للفنون الكونية.";
+            }
+
+            const checkboxes = document.querySelectorAll('.specialties-grid input[type="checkbox"]');
+            let selectedSpecs = [];
+            checkboxes.forEach(cb => {
+                if(cb.checked) {
+                    selectedSpecs.push(cb.value);
+                }
+            });
+
+            if(selectedSpecs.length === 0) {
+                selectedSpecs.push("فنون عامة");
+            }
+
+            const randomId = "SAT-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000);
+
+            const payload = {
+                name: name,
+                nickname: nickname,
+                phone: phone,
+                bio: bio,
+                specialties: selectedSpecs.join(', '),
+                memberId: randomId
+            };
+
+            try {
+                // إرسال البيانات بشكل قياسي لقراءة الرد وفحص التكرار بدقة
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8' 
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                // إذا وجد السكريبت أن اللقب مكرر، يوقف العملية فوراً وينبه المستخدم
+                if (data.result === "duplicate") {
+                    alert("عذراً! هذا اللقب مستخدم ومحجوز مسبقاً من قِبل فنان آخر في الأكاديمية. يرجى اختيار لقب مميز وخاص بك.");
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
+                    return; 
+                }
+
+                if (data.result === "error") {
+                    alert("حدث خطأ أثناء حفظ البيانات في السيرفر الكوني.");
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                // في حال النجاح التام، يتم عرض البطاقة الرقمية مباشرة
+                document.getElementById('cardName').innerText = name;
+                document.getElementById('cardNickname').innerText = `(${nickname})`;
+                document.getElementById('cardPhone').innerText = phone;
+                document.getElementById('cardBio').innerText = `"${bio}"`;
+                document.getElementById('cardMemberId').innerText = randomId;
+
+                const specContainer = document.getElementById('cardSpecialties');
+                specContainer.innerHTML = ''; 
+                selectedSpecs.forEach(spec => {
+                    const badge = document.createElement('span');
+                    badge.className = 'card-spec-badge';
+                    badge.innerText = spec;
+                    specContainer.appendChild(badge);
+                });
+
+                const formContainer = document.getElementById('regFormContainer');
+                const resultZone = document.getElementById('cardResultZone');
+
+                formContainer.classList.add('hidden');
+
+                setTimeout(() => {
+                    formContainer.style.display = 'none';
+                    resultZone.style.display = 'flex';
+                    setTimeout(() => {
+                        resultZone.classList.add('show');
+                    }, 50);
+                }, 400);
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("حدث خطأ في الاتصال بالبوابة الأمنية، يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.");
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
