@@ -77,6 +77,7 @@
             border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 40px 30px;
+            -webkit-backdrop-filter: blur(15px);
             backdrop-filter: blur(15px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
         }
@@ -137,7 +138,6 @@
             box-shadow: 0 0 15px rgba(242, 197, 114, 0.15);
         }
 
-        /* تنسيق مخصص لحقل تحميل الملفات */
         .form-group input[type="file"] {
             padding: 10px;
             cursor: pointer;
@@ -150,6 +150,14 @@
             opacity: 0.5;
             font-weight: normal;
             margin-right: 5px;
+        }
+        
+        .security-box {
+            background: rgba(242, 60, 60, 0.05);
+            border: 1px dashed rgba(242, 197, 114, 0.4);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
         }
 
         .specialties-grid {
@@ -199,11 +207,6 @@
             color: var(--accent-gold);
             box-shadow: 0 0 15px rgba(242, 197, 114, 0.2);
             transform: translateY(-2px);
-        }
-
-        .specialty-label:hover {
-            border-color: var(--accent-gold);
-            background: rgba(255, 255, 255, 0.05);
         }
 
         .submit-btn {
@@ -258,8 +261,8 @@
             border-radius: 24px;
             padding: 25px;
             position: relative;
-            backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
             box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 40px rgba(242, 197, 114, 0.05) inset;
             overflow: hidden;
             margin-bottom: 20px;
@@ -323,7 +326,6 @@
             font-weight: bold;
         }
 
-        /* تصميم جديد لجسم البطاقة الكلاسيكي (صورة على اليمين وبيانات على اليسار) */
         .card-body {
             display: flex;
             gap: 20px;
@@ -331,7 +333,6 @@
             flex: 1;
         }
 
-        /* حاوية الصورة الشخصية المربعة داخل البطاقة */
         .card-avatar-container {
             flex: 0 0 100px;
             height: 100px;
@@ -350,7 +351,6 @@
             object-fit: cover;
         }
 
-        /* لوحة البيانات بجانب الصورة */
         .card-member-info-panel {
             flex: 1;
             display: flex;
@@ -396,7 +396,9 @@
             margin-top: 4px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
+            box-orient: vertical;
             overflow: hidden;
         }
 
@@ -434,18 +436,6 @@
             margin-bottom: 15px;
         }
 
-        .download-btn:hover {
-            background: rgba(242, 197, 114, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .download-btn:disabled {
-            background: rgba(55, 55, 55, 0.1);
-            border-color: #555;
-            color: #aaa;
-            cursor: not-allowed;
-        }
-
         .academy-gate-btn {
             display: inline-flex;
             align-items: center;
@@ -461,19 +451,6 @@
             font-weight: 900;
             text-decoration: none;
             box-shadow: 0 0 20px rgba(242, 197, 114, 0.1);
-            animation: pulsePortal 2s infinite alternate ease-in-out;
-        }
-
-        .academy-gate-btn:hover {
-            background: var(--accent-gold);
-            color: #0a0705;
-            box-shadow: 0 0 30px rgba(242, 197, 114, 0.5);
-            transform: scale(1.03);
-        }
-
-        @keyframes pulsePortal {
-            0% { box-shadow: 0 0 15px rgba(242, 197, 114, 0.1); }
-            100% { box-shadow: 0 0 30px rgba(242, 197, 114, 0.3); }
         }
 
         .success-title {
@@ -493,13 +470,6 @@
             font-weight: 500;
             pointer-events: none;
         }
-
-        .dev-footer span {
-            color: var(--accent-gold);
-            font-weight: 700;
-            text-shadow: 0 0 12px rgba(242, 197, 114, 0.3);
-            margin-right: 3px;
-        }
     </style>
 </head>
 <body>
@@ -516,23 +486,25 @@
 
         <form id="academyRegistrationForm" onsubmit="generateMembership(event)">
             
+            <input type="text" id="botTrap" style="display: none !important;" tabindex="-1" autocomplete="off">
+
             <div class="form-group">
-                <label for="inputPhoto">صورة العضو / الهوية الفنية <span class="optional-badge">(اختياري - سيتم استخدام رمز افتراضي)</span></label>
+                <label for="inputPhoto">صورة العضو / الهوية الفنية <span class="optional-badge">(اختياري)</span></label>
                 <input type="file" id="inputPhoto" accept="image/png, image/jpeg, image/webp" onchange="previewUserPhoto(event)">
             </div>
 
             <div class="form-group">
                 <label for="inputName">الاسم الكامل</label>
-                <input type="text" id="inputName" placeholder="اكتب اسمك الثلاثي أو الثنائي..." required>
+                <input type="text" id="inputName" placeholder="اكتب اسمك الثلاثي أو الثنائي..." maxlength="40" required>
             </div>
 
             <div class="form-group">
                 <label for="inputNickname">اللقب / الهوية الفنية (اسم الشهرة)</label>
-                <input type="text" id="inputNickname" placeholder="مثال: فنان الفضاء, ماركو, الساحر..." required>
+                <input type="text" id="inputNickname" placeholder="مثال: فنان الفضاء, ماركو, الساحر..." maxlength="25" required>
             </div>
 
             <div class="form-group">
-                <label>تخصصاتك الفنية <span style="font-size:0.8rem; opacity:0.6;">(يمكنك اختيار أكثر من تخصص)</span></label>
+                <label>تخصصاتك الفنية</label>
                 <div class="specialties-grid">
                     <div class="specialty-item">
                         <input type="checkbox" id="spec-titan" value="الرسم (Titan)">
@@ -562,24 +534,22 @@
                             <span class="moon-tag">Enceladus</span>
                         </label>
                     </div>
-                    <div class="specialty-item">
-                        <input type="checkbox" id="spec-dione" value="الخط (Dione)">
-                        <label for="spec-dione" class="specialty-label">
-                            <span>الخط</span>
-                            <span class="moon-tag">Dione</span>
-                        </label>
-                    </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="inputPhone">رقم الهاتف</label>
-                <input type="tel" id="inputPhone" placeholder="07XXXXXXXX" required style="direction: ltr; text-align: left;">
+                <input type="tel" id="inputPhone" placeholder="07XXXXXXXX" maxlength="15" required style="direction: ltr; text-align: left;">
             </div>
 
             <div class="form-group">
                 <label for="inputBio">نبذة شخصية <span class="optional-badge">(اختياري - سطر واحد)</span></label>
-                <textarea id="inputBio" rows="1" placeholder="اكتب عبارة ملهمة تمثلك كفنان..."></textarea>
+                <textarea id="inputBio" rows="1" maxlength="70" placeholder="اكتب عبارة ملهمة تمثلك كفنان..."></textarea>
+            </div>
+
+            <div class="form-group security-box">
+                <label id="mathCaptchaLabel">درع الأمان: يرجى حل العملية الحسابية 🛡️</label>
+                <input type="number" id="mathCaptchaInput" placeholder="أدخل الناتج هنا..." required>
             </div>
 
             <button type="submit" class="submit-btn">إصدار بطاقة العضوية وتأكيد الانضمام 🌌</button>
@@ -588,7 +558,6 @@
 
     <div class="card-result-zone" id="cardResultZone">
         <h2 class="success-title">✨ مبارك! تم اعتماد عضويتك بنجاح</h2>
-        
         <div class="membership-card" id="membershipCardDiv">
             <div class="card-rings-decor"></div>
             <div class="card-header">
@@ -598,12 +567,10 @@
                 </div>
                 <div class="member-id-badge" id="cardMemberId">SAT-2026-XXXX</div>
             </div>
-            
             <div class="card-body">
                 <div class="card-avatar-container">
                     <img src="" alt="صورة العضو" id="cardAvatar">
                 </div>
-
                 <div class="card-member-info-panel">
                     <div class="primary-info">
                         <span class="display-nickname" id="cardNickname"></span>
@@ -611,41 +578,43 @@
                     </div>
                     <div class="display-phone" id="cardPhone"></div>
                     <div class="display-bio" id="cardBio"></div>
-                    
                     <div class="card-specialties-container" id="cardSpecialties"></div>
                 </div>
             </div>
         </div>
-
         <button class="download-btn" id="cardDownloadBtn" onclick="downloadCardAsImage()">
             <span>تحميل البطاقة كصورة (HD) 💾</span>
         </button>
-
         <a href="https://chat.whatsapp.com/EIJogTGiz1dKOvZNKh4hJD" target="_blank" class="academy-gate-btn">
             <span>الانتقال ودخول مجتمع الأكاديمية 🚀</span>
         </a>
-    </div>
-
-    <div class="dev-footer">
-        تحت برمجة وتطوير <span>لابوبو</span>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <script>
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXGt6W8KSvmJAIEFG8G1XQV2rmZMWKDaLnliufYakOlKx3sSg3OfAjS-nfUBVmzbTS-A/exec";
-        let userPhotoUrl = ""; // لتخزين رابط الصورة المؤقت
+        let userPhotoUrl = ""; 
+        
+        let captchaNum1 = 0;
+        let captchaNum2 = 0;
 
-        // دالة لمعاينة الصورة المرفوعة في النموذج (اختياري، لفحص جودة الصورة)
+        function generateCaptcha() {
+            captchaNum1 = Math.floor(Math.random() * 10) + 1;
+            captchaNum2 = Math.floor(Math.random() * 10) + 1;
+            document.getElementById('mathCaptchaLabel').innerText = `درع الأمان: كم حاصل جمع ${captchaNum1} + ${captchaNum2}؟ 🛡️`;
+            document.getElementById('mathCaptchaInput').value = "";
+        }
+
+        window.onload = function() {
+            generateCaptcha();
+        };
+
         function previewUserPhoto(event) {
             const input = event.target;
-            const cardAvatar = document.getElementById('cardAvatar');
-
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    userPhotoUrl = e.target.result; // تخزين الصورة المرفوعة كـ Base64
-                }
+                reader.onload = function(e) { userPhotoUrl = e.target.result; }
                 reader.readAsDataURL(input.files[0]);
             } else {
                 userPhotoUrl = "";
@@ -655,33 +624,40 @@
         async function generateMembership(event) {
             event.preventDefault();
 
+            const botTrap = document.getElementById('botTrap').value;
+            if (botTrap !== "") {
+                alert("تم رصد نشاط غير طبيعي، تم إلغاء الطلب.");
+                return;
+            }
+
+            const userAnswer = parseInt(document.getElementById('mathCaptchaInput').value);
+            if (userAnswer !== (captchaNum1 + captchaNum2)) {
+                alert("إجابة سؤال الأمان خاطئة. يرجى المحاولة مرة أخرى.");
+                generateCaptcha();
+                return;
+            }
+
+            const lastSubmissionTime = localStorage.getItem('saturn_last_submission');
+            if (lastSubmissionTime && (Date.now() - parseInt(lastSubmissionTime) < 60000)) {
+                alert("لقد قمت بإرسال طلب مؤخراً. يرجى الانتظار لمدة دقيقة قبل المحاولة مرة أخرى لمنع الضغط على السيرفر.");
+                return;
+            }
+
             const submitBtn = document.querySelector('.submit-btn');
             const originalBtnText = submitBtn.innerText;
-            
-            submitBtn.innerText = "جاري التحقق من اللقب واعتماد البيانات... ⏳";
+            submitBtn.innerText = "جاري التحقق وإجراء الفحص الأمني... ⏳";
             submitBtn.disabled = true;
 
-            const name = document.getElementById('inputName').value.trim();
-            const nickname = document.getElementById('inputNickname').value.trim();
-            const phone = document.getElementById('inputPhone').value.trim();
-            let bio = document.getElementById('inputBio').value.trim();
-            const photoInput = document.getElementById('inputPhoto');
+            const name = document.getElementById('inputName').value.trim().substring(0, 40);
+            const nickname = document.getElementById('inputNickname').value.trim().substring(0, 25);
+            const phone = document.getElementById('inputPhone').value.trim().substring(0, 15);
+            let bio = document.getElementById('inputBio').value.trim().substring(0, 70);
             
-            if(bio === "") {
-                bio = "عضو مبدع في فضاء أكاديمية ساترن للفنون الكونية.";
-            }
+            if(bio === "") bio = "عضو مبدع في فضاء أكاديمية ساترن للفنون الكونية.";
 
-            const checkboxes = document.querySelectorAll('.specialties-grid input[type="checkbox"]');
-            let selectedSpecs = [];
-            checkboxes.forEach(cb => {
-                if(cb.checked) {
-                    selectedSpecs.push(cb.value);
-                }
-            });
-
-            if(selectedSpecs.length === 0) {
-                selectedSpecs.push("فنون عامة");
-            }
+            const checkboxes = document.querySelectorAll('.specialties-grid input[type="checkbox"]:checked');
+            let selectedSpecs = Array.from(checkboxes).map(cb => cb.value);
+            if(selectedSpecs.length === 0) selectedSpecs.push("فنون عامة");
 
             const randomId = "SAT-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000);
 
@@ -697,47 +673,39 @@
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/plain;charset=utf-8' 
-                    },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
 
                 const data = await response.json();
 
                 if (data.result === "duplicate") {
-                    alert("عذراً! هذا اللقب مستخدم ومحجوز مسبقاً من قِبل فنان آخر في الأكاديمية. يرجى اختيار لقب مميز وخاص بك.");
+                    alert("عذراً! هذا اللقب مستخدم ومحجوز مسبقاً. اختر لقباً آخر.");
                     submitBtn.innerText = originalBtnText;
                     submitBtn.disabled = false;
+                    generateCaptcha();
                     return; 
                 }
 
-                if (data.result === "error") {
-                    alert("حدث خطأ أثناء حفظ البيانات في السيرفر الكوني.");
-                    submitBtn.innerText = originalBtnText;
-                    submitBtn.disabled = false;
-                    return;
-                }
+                if (data.result === "error") throw new Error("Server error");
 
-                // تعبئة بيانات البطاقة الكونية
+                localStorage.setItem('saturn_last_submission', Date.now().toString());
+
                 document.getElementById('cardName').innerText = name;
                 document.getElementById('cardNickname').innerText = nickname;
                 document.getElementById('cardPhone').innerText = phone;
                 document.getElementById('cardBio').innerText = `"${bio}"`;
                 document.getElementById('cardMemberId').innerText = randomId;
 
-                // حقن الصورة الشخصية للعضو المربعة الجديد داخل البطاقة
                 const cardAvatar = document.getElementById('cardAvatar');
-                if (userPhotoUrl && photoInput.files.length > 0) {
-                    cardAvatar.src = userPhotoUrl; // استخدام الصورة المرفوعة
+                if (userPhotoUrl && document.getElementById('inputPhoto').files.length > 0) {
+                    cardAvatar.src = userPhotoUrl;
                     cardAvatar.style.opacity = 1;
                 } else {
-                    // رمز افتراضي متلألئ للعضو (Holographic generic user icon)
                     cardAvatar.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0idmFyKC0tYWNjZW50LWdvbGQpIj48cGF0aCBkPSJNMTIgMTEuNWMtMi41OCAwLTQuNjk0LTIuMDY3LTQuNjk0LTQuNjI1QzcuMzA2IDQuMzA4IDkuNDE4IDIuMjUgMTIgMi4yNXM0LjY5NCAyLjA1OCA0LjY5NCA0LjYyNUMxNi42OTQgOS40MzMgMTQuNTggMTEuNSAxMiAxMS41em05IDIuMjV2Ny41Yy0uMzIgMC0uNDk4LS4zMjktLjUyMS0uNDcyLTEuNzgzLTUuMTQyLTkuMDI3LTUuMTQyLTkuODI5IDBINGMtLjI1IDAtLjQwNS4zMTgtLjUyMS40NzJ2LTcuNWguMjV6bS05IDYuNzVjLjggMCAxLjUtLjcxMyAxLjUtMS41cy0uNy0xLjUtMS41LTEuNVMxMC41IDE5Ljg5NiAxMC41IDIwLjc1czcuMTUxIDEuNSAxLjUgMS41eiIvPjwvc3ZnPg==";
-                    cardAvatar.style.opacity = 0.5; // رمز افتراضي شفاف قليلاً ليتناسب مع الثيم
+                    cardAvatar.style.opacity = 0.5;
                 }
 
-                // حقن التخصصات المختارة كشارات صغيرة
                 const specContainer = document.getElementById('cardSpecialties');
                 specContainer.innerHTML = ''; 
                 selectedSpecs.forEach(spec => {
@@ -747,49 +715,38 @@
                     specContainer.appendChild(badge);
                 });
 
-                const formContainer = document.getElementById('regFormContainer');
+                document.getElementById('regFormContainer').style.display = 'none';
                 const resultZone = document.getElementById('cardResultZone');
-
-                formContainer.classList.add('hidden');
-
-                setTimeout(() => {
-                    formContainer.style.display = 'none';
-                    resultZone.style.display = 'flex';
-                    setTimeout(() => {
-                        resultZone.classList.add('show');
-                    }, 50);
-                }, 400);
+                resultZone.style.display = 'flex';
+                setTimeout(() => resultZone.classList.add('show'), 50);
 
             } catch (error) {
                 console.error("Error:", error);
-                alert("حدث خطأ في الاتصال بالبوابة الأمنية، يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.");
+                alert("حدث خطأ في الاتصال بالسيرفر. يرجى المحاولة مجدداً.");
                 submitBtn.innerText = originalBtnText;
                 submitBtn.disabled = false;
+                generateCaptcha();
             }
         }
 
-        // دالة فائقة الدقة (HD) لإصلاح مشكلة تحميل الصورة بجودة عالية
         function downloadCardAsImage() {
             const cardElement = document.getElementById('membershipCardDiv');
             const downloadBtn = document.getElementById('cardDownloadBtn');
             const nickname = document.getElementById('cardNickname').innerText.trim() || "Saturn-Artist";
 
-            downloadBtn.innerText = "جاري التقاط الصورة وتحميلها... ⏳";
+            downloadBtn.innerText = "جاري التقاط الصورة... ⏳";
             downloadBtn.disabled = true;
 
-            // ضبط إعدادات التقاط الصورة HD لضمان أفضل جودة نصوص وصور
             html2canvas(cardElement, {
-                scale: 3, // رفع جودة الصورة إلى 3 أضعاف لمنع بكسلة النصوص الحادة
-                backgroundColor: null, // الحفاظ على خلفية الكارد المتدرجة
-                useCORS: true, // للسماح بتحميل الصور الخارجية (مثل الأفاتار الافتراضي) بشكل كامل داخل الصورة
-                allowTaint: true, // للسماح بالصور المرفوعة محلياً
+                scale: 3, 
+                backgroundColor: null, 
+                useCORS: true, 
+                allowTaint: true, 
                 logging: false,
-                width: cardElement.offsetWidth, // الحفاظ على الأبعاد الحقيقية للكارد قبل التكبير
+                width: cardElement.offsetWidth,
                 height: cardElement.offsetHeight
             }).then(canvas => {
-                const imageURI = canvas.toDataURL('image/png', 1.0); // الحصول على رابط الصورة كـ Base64 بجودة عالية
-                
-                // إنشاء رابط خفي والضغط عليه لبدء التحميل تلقائياً
+                const imageURI = canvas.toDataURL('image/png', 1.0);
                 const createLink = document.createElement('a');
                 createLink.download = `Saturn-Card-${nickname}.png`;
                 createLink.href = imageURI;
@@ -797,12 +754,10 @@
                 createLink.click();
                 document.body.removeChild(createLink);
 
-                // إعادة الزر لوضعه الطبيعي
                 downloadBtn.innerText = "تحميل البطاقة كصورة (HD) 💾";
                 downloadBtn.disabled = false;
             }).catch(error => {
-                console.error("تحذير تحميل البطاقة:", error);
-                alert("حدث خطأ بسيط أثناء تصدير الصورة، يرجى المحاولة مرة أخرى.");
+                alert("حدث خطأ أثناء تصدير الصورة.");
                 downloadBtn.innerText = "تحميل البطاقة كصورة (HD) 💾";
                 downloadBtn.disabled = false;
             });
