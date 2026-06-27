@@ -460,16 +460,6 @@
             font-weight: bold;
             margin-bottom: 15px;
         }
-
-        .dev-footer {
-            margin-top: 40px;
-            font-size: 0.85rem;
-            color: rgba(217, 180, 143, 0.4);
-            text-align: center;
-            letter-spacing: 0.5px;
-            font-weight: 500;
-            pointer-events: none;
-        }
     </style>
 </head>
 <body>
@@ -594,15 +584,14 @@
 
     <script>
         // ==========================================
-        // 🟢 الرابط الجديد لقاعدة البيانات الذي قمت بتوفيره
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylMfrJmtndnX4ZpfHcM6K1ISmvyhDukoDVMA8ju5khej97eInlIXrpdn_R_CGhLTRgYQ/exec";
+        // 🟢 الرابط الجديد الذي قمت بإنشائه
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEnJE9kEaKdrpDnEATIW2DBdPPqCxmmRWJngQXa93BSZW1Eo9IqmS-xZIF3qEAakWjTg/exec";
         
-        // 🔴 لا تنسَ وضع مفتاح ImgBB الخاص بك هنا لكي تعمل ميزة رفع الصور
+        // 🔴 ضع هنا مفتاح الحساب الخاص بك من موقع ImgBB لكي ترفع الصور بنجاح
         const IMGBB_API_KEY = "ضع_مفتاح_IMGBB_هنا"; 
         // ==========================================
 
         let userPhotoUrl = ""; 
-        
         let captchaNum1 = 0;
         let captchaNum2 = 0;
 
@@ -641,7 +630,7 @@
                     return data.data.url; 
                 }
             } catch (error) {
-                console.error("خطأ أثناء رفع الصورة:", error);
+                console.error("خطأ أثناء الرفع إلى السيرفر الخارجي:", error);
             }
             return ""; 
         }
@@ -651,26 +640,26 @@
 
             const botTrap = document.getElementById('botTrap').value;
             if (botTrap !== "") {
-                alert("تم رصد نشاط غير طبيعي، تم إلغاء الطلب.");
+                alert("تم رصد نشاط غير طبيعي.");
                 return;
             }
 
             const userAnswer = parseInt(document.getElementById('mathCaptchaInput').value);
             if (userAnswer !== (captchaNum1 + captchaNum2)) {
-                alert("إجابة سؤال الأمان خاطئة. يرجى المحاولة مرة أخرى.");
+                alert("إجابة سؤال الأمان خاطئة.");
                 generateCaptcha();
                 return;
             }
 
             const lastSubmissionTime = localStorage.getItem('saturn_last_submission');
             if (lastSubmissionTime && (Date.now() - parseInt(lastSubmissionTime) < 60000)) {
-                alert("لقد قمت بإرسال طلب مؤخراً. يرجى الانتظار لمدة دقيقة قبل المحاولة مرة أخرى لمنع الضغط على السيرفر.");
+                alert("يرجى الانتظار لمدة دقيقة بين المحاولات.");
                 return;
             }
 
             const submitBtn = document.querySelector('.submit-btn');
             const originalBtnText = submitBtn.innerText;
-            submitBtn.innerText = "جاري رفع البيانات وإصدار البطاقة... ⏳";
+            submitBtn.innerText = "جاري معالجة الصورة ورفع البيانات... ⏳";
             submitBtn.disabled = true;
 
             const name = document.getElementById('inputName').value.trim().substring(0, 40);
@@ -689,10 +678,10 @@
             let finalPhotoUrl = "";
             const photoFile = document.getElementById('inputPhoto').files[0];
             if (photoFile) {
-                if(IMGBB_API_KEY === "ضع_مفتاح_IMGBB_هنا") {
-                    console.warn("تنبيه: لم تقم بإضافة مفتاح ImgBB، سيتم إكمال التسجيل بدون صورة في قاعدة البيانات.");
-                } else {
+                if(IMGBB_API_KEY !== "ضع_مفتاح_IMGBB_هنا") {
                     finalPhotoUrl = await uploadImageToImgBB(photoFile);
+                } else {
+                    console.warn("لم تقم بإضافة مفتاح ImgBB بعد.");
                 }
             }
 
@@ -716,7 +705,7 @@
                 const data = await response.json();
 
                 if (data.result === "duplicate") {
-                    alert("عذراً! هذا اللقب مستخدم ومحجوز مسبقاً. اختر لقباً آخر.");
+                    alert("عذراً! هذا اللقب مستخدم ومحجوز مسبقاً.");
                     submitBtn.innerText = originalBtnText;
                     submitBtn.disabled = false;
                     generateCaptcha();
@@ -758,7 +747,7 @@
 
             } catch (error) {
                 console.error("Error:", error);
-                alert("حدث خطأ في الاتصال بالسيرفر. يرجى المحاولة مجدداً.");
+                alert("حدث خطأ أثناء الاتصال بالسيرفر.");
                 submitBtn.innerText = originalBtnText;
                 submitBtn.disabled = false;
                 generateCaptcha();
