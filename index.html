@@ -594,14 +594,14 @@
 
     <script>
         // ==========================================
-        // إعدادات الروابط والمفاتيح
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXGt6W8KSvmJAIEFG8G1XQV2rmZMWKDaLnliufYakOlKx3sSg3OfAjS-nfUBVmzbTS-A/exec";
+        // 🟢 الرابط الجديد لقاعدة البيانات الذي قمت بتوفيره
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylMfrJmtndnX4ZpfHcM6K1ISmvyhDukoDVMA8ju5khej97eInlIXrpdn_R_CGhLTRgYQ/exec";
         
-        // 🔴 ضع مفتاح ImgBB الخاص بك هنا (مهم جداً لرفع الصور)
+        // 🔴 لا تنسَ وضع مفتاح ImgBB الخاص بك هنا لكي تعمل ميزة رفع الصور
         const IMGBB_API_KEY = "ضع_مفتاح_IMGBB_هنا"; 
         // ==========================================
 
-        let userPhotoUrl = ""; // رابط العرض المؤقت للمستخدم محلياً
+        let userPhotoUrl = ""; 
         
         let captchaNum1 = 0;
         let captchaNum2 = 0;
@@ -617,7 +617,6 @@
             generateCaptcha();
         };
 
-        // دالة عرض الصورة للمستخدم قبل الإرسال
         function previewUserPhoto(event) {
             const input = event.target;
             if (input.files && input.files[0]) {
@@ -629,7 +628,6 @@
             }
         }
 
-        // دالة رفع الصورة الحقيقية إلى ImgBB
         async function uploadImageToImgBB(file) {
             const formData = new FormData();
             formData.append('image', file);
@@ -640,7 +638,7 @@
                 });
                 const data = await response.json();
                 if (data.success) {
-                    return data.data.url; // إعادة الرابط المباشر للصورة المرفوعة
+                    return data.data.url; 
                 }
             } catch (error) {
                 console.error("خطأ أثناء رفع الصورة:", error);
@@ -675,7 +673,6 @@
             submitBtn.innerText = "جاري رفع البيانات وإصدار البطاقة... ⏳";
             submitBtn.disabled = true;
 
-            // 1. معالجة البيانات النصية
             const name = document.getElementById('inputName').value.trim().substring(0, 40);
             const nickname = document.getElementById('inputNickname').value.trim().substring(0, 25);
             const phone = document.getElementById('inputPhone').value.trim().substring(0, 15);
@@ -689,18 +686,16 @@
 
             const randomId = "SAT-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000);
 
-            // 2. رفع الصورة (إن وجدت) والحصول على رابطها المباشر
             let finalPhotoUrl = "";
             const photoFile = document.getElementById('inputPhoto').files[0];
             if (photoFile) {
-                if(IMGBB_API_KEY === "53de5995f689b8cf31ca2a9db63811e5"){
+                if(IMGBB_API_KEY === "ضع_مفتاح_IMGBB_هنا") {
                     console.warn("تنبيه: لم تقم بإضافة مفتاح ImgBB، سيتم إكمال التسجيل بدون صورة في قاعدة البيانات.");
                 } else {
                     finalPhotoUrl = await uploadImageToImgBB(photoFile);
                 }
             }
 
-            // 3. تجهيز الحزمة (Payload) لإرسالها لجدول جوجل متضمنة الرابط المباشر
             const payload = {
                 name: name,
                 nickname: nickname,
@@ -708,11 +703,10 @@
                 bio: bio,
                 specialties: selectedSpecs.join(', '),
                 memberId: randomId,
-                photoUrl: finalPhotoUrl // 🔴 هذا هو المتغير الجديد الذي سيصل إلى جدول البيانات
+                photoUrl: finalPhotoUrl 
             };
 
             try {
-                // إرسال البيانات إلى Google Apps Script
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -733,7 +727,6 @@
 
                 localStorage.setItem('saturn_last_submission', Date.now().toString());
 
-                // عرض البطاقة للمستخدم بعد نجاح التسجيل
                 document.getElementById('cardName').innerText = name;
                 document.getElementById('cardNickname').innerText = nickname;
                 document.getElementById('cardPhone').innerText = phone;
@@ -741,7 +734,6 @@
                 document.getElementById('cardMemberId').innerText = randomId;
 
                 const cardAvatar = document.getElementById('cardAvatar');
-                // نستخدم الصورة المرفوعة محلياً (userPhotoUrl) لسرعة العرض الفوري على الشاشة
                 if (userPhotoUrl && photoFile) {
                     cardAvatar.src = userPhotoUrl; 
                     cardAvatar.style.opacity = 1;
